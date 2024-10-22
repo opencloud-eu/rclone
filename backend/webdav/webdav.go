@@ -84,7 +84,10 @@ func init() {
 				Help:  "Nextcloud",
 			}, {
 				Value: "owncloud",
-				Help:  "Owncloud",
+				Help:  "Owncloud 10 PHP based WebDAV server",
+			}, {
+				Value: "InfiniteScale",
+				Help:  "ownCloud Infinite Scale",
 			}, {
 				Value: "sharepoint",
 				Help:  "Sharepoint Online, authenticated by Microsoft account",
@@ -630,6 +633,14 @@ func (f *Fs) setQuirks(ctx context.Context, vendor string) error {
 		f.propsetMtime = true
 		f.hasOCMD5 = true
 		f.hasOCSHA1 = true
+	case "Infinite Scale":
+		f.precision = time.Second
+		f.useOCMtime = true
+		f.propsetMtime = true
+		f.hasOCMD5 = true
+		f.hasOCSHA1 = true
+		f.canChunk = true
+		f.opt.ChunkSize = 1024 * 1024
 	case "nextcloud":
 		f.precision = time.Second
 		f.useOCMtime = true
