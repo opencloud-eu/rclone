@@ -1509,8 +1509,14 @@ func (o *Object) Update(ctx context.Context, in io.Reader, src fs.ObjectInfo, op
 	}
 
 	if o.shouldUseChunkedUpload(src) {
-		fs.Debugf(src, "Update will use the chunked upload strategy")
-		err = o.updateChunked(ctx, in, src, options...)
+		if o.fs.opt.Vendor == "nextcloud" {
+			fs.Debugf(src, "Update will use the chunked upload strategy")
+			err = o.updateChunked(ctx, in, src, options...)
+		} else if o.fs.opt.Vendor == "Infinite Scale" {
+			err = o.uploadFileViaTus(ctx, in, src, options...)
+		} else {
+			fs.Debug(src, "Chunking - unknown vendor")
+		}
 		if err != nil {
 			return err
 		}

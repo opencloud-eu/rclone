@@ -75,6 +75,13 @@ func (o *Object) shouldUseChunkedUpload(src fs.ObjectInfo) bool {
 	return o.fs.canChunk && o.fs.opt.ChunkSize > 0 && src.Size() > int64(o.fs.opt.ChunkSize)
 }
 
+func (o *Object) updateTus(ctx context.Context, in0 io.Reader, src fs.ObjectInfo, options ...fs.OpenOption) (err error) {
+	// create the tus client.
+
+	err = o.uploadFileViaTus(ctx, in0, src, options...)
+	return nil
+}
+
 func (o *Object) updateChunked(ctx context.Context, in0 io.Reader, src fs.ObjectInfo, options ...fs.OpenOption) (err error) {
 	var uploadDir string
 
